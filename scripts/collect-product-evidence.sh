@@ -7,7 +7,7 @@ test -n "${DREAM_MACHINE_SELECTION_REPORT:-}"; test -n "${DREAM_MACHINE_SELECTIO
 test -f "$semantic_review"
 test -z "$(git -C "$root" status --porcelain)" || { echo 'source must be clean' >&2; exit 1; }
 mkdir -p "$evidence"; test -z "$(find "$evidence" -mindepth 1 -maxdepth 1 ! -name "publication-*" ! -name "rust-share.json" -print -quit)" || { echo "evidence directory contains prior product evidence" >&2; exit 1; }; mkdir -p "$evidence/traces"
-cp "$DREAM_MACHINE_SELECTION_REPORT" "$evidence/selection-report.json"; cp -a "$DREAM_MACHINE_SELECTION_EVIDENCE"/. "$evidence"/
+cp "$DREAM_MACHINE_SELECTION_REPORT" "$evidence/selection-report.json"
 gate="$root/scripts/dream-machine-product-gate.mjs"; record(){ node "$gate" record "$root" "$evidence" "$1" -- "${@:2}"; }
 record rust bash scripts/suite-rust.sh
 record backend cargo metadata --locked --offline --format-version 1
