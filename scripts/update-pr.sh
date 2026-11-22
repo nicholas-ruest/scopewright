@@ -2,7 +2,7 @@
 set -euo pipefail
 owner=nicholas-ruest
 repo=scopewright
-branch=product/scopewright-2026-11-20
+branch=product/scopewright-2026-11-21
 remote="https://github.com/$owner/$repo.git"
 test "$(gh api user --jq .login)" = "$owner" || { echo PUBLISH_DENIED:wrong-owner >&2; exit 71; }
 test "$(git remote get-url origin)" = "$remote"
