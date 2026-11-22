@@ -9,5 +9,6 @@ clone(){ n=$1; u=$2; s=$3; test -d "$up/probe-sources/$n/.git" || git clone -q "
 clone sublinear https://github.com/ruvnet/sublinear-time-solver.git b945e269ea1a910d0d7ce6e3eea4aa2ecf4aa191
 clone tokeneconomizer https://github.com/microsoft/TokenEconomizer.git 1bfeccdcecf48333b22762ad1dd9e36c6dc065df
 python3 -m venv "$up/probe-venv"; "$up/probe-venv/bin/pip" install -q "$up/probe-sources/tokeneconomizer"
+podman image inspect otel/opentelemetry-collector-contrib@sha256:5901567d6f684547bafee53f02403869b5655e13a4e0af65aa6ae9f6301075d9 >/dev/null 2>&1 || podman pull otel/opentelemetry-collector-contrib@sha256:5901567d6f684547bafee53f02403869b5655e13a4e0af65aa6ae9f6301075d9 >/dev/null
 "$up/probe-work/node_modules/.bin/agentdb" init "$up/agentdb-recorded.db" >/dev/null
 export SCOPEWRIGHT_PROBE_ROOT="$up"; if test -n "${GITHUB_ENV:-}"; then printf 'SCOPEWRIGHT_PROBE_ROOT=%s\n' "$up" >> "$GITHUB_ENV"; fi; echo UPSTREAM_BOOTSTRAP_PASS
