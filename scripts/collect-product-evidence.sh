@@ -8,6 +8,10 @@ test -f "$semantic_review"
 test -z "$(git -C "$root" status --porcelain)" || { echo 'source must be clean' >&2; exit 1; }
 mkdir -p "$evidence"; test -z "$(find "$evidence" -mindepth 1 -maxdepth 1 ! -name "publication-*" ! -name "rust-share.json" -print -quit)" || { echo "evidence directory contains prior product evidence" >&2; exit 1; }; mkdir -p "$evidence/traces"
 cp "$DREAM_MACHINE_SELECTION_REPORT" "$evidence/selection-report.json"
+mkdir -p "$evidence/selection"
+cp "$DREAM_MACHINE_SELECTION_EVIDENCE"/*.receipt.json "$evidence/selection/"
+cp "$DREAM_MACHINE_SELECTION_EVIDENCE"/*.log "$evidence/"
+node -e 'const fs=require("fs"),p=process.argv[1],r=JSON.parse(fs.readFileSync(p,"utf8")); for(const d of r.dependencies) for(const k of ["success","failure"]) d.probes[k].path=`selection/${d.probes[k].path}`; fs.writeFileSync(p,JSON.stringify(r,null,2)+"\n")' "$evidence/selection-report.json"
 probe_archive=$(node -e 'process.stdout.write(require(process.argv[1]).probe_source_archive.path)' "$DREAM_MACHINE_SELECTION_REPORT")
 test "$probe_archive" = "$(basename "$probe_archive")"
 cp "$DREAM_MACHINE_SELECTION_EVIDENCE/$probe_archive" "$evidence/$probe_archive"
