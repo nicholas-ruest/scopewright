@@ -19,7 +19,16 @@ record benchmark bash scripts/suite-benchmark.sh
 record ablations bash scripts/suite-ablations.sh
 record containers bash scripts/container-smoke.sh
 record browser bash scripts/suite-browser.sh
-integration_log=$(node -e 'const fs=require("fs"),p=process.argv[1];for(const n of fs.readdirSync(p)){if(n.endsWith(".receipt.json")){const r=require(`${p}/${n}`);if(r.suite==="integrations")process.stdout.write(r.log)}}' "$evidence"); cp "$evidence/$integration_log" "$evidence/traces/integrations.log"
+source_sha=$(git -C "$root" rev-parse HEAD)
+integration_log=$(node -e '
+  const fs = require("fs"), p = process.argv[1], source = process.argv[2];
+  const matches = fs.readdirSync(p).filter((n) => n.endsWith(".receipt.json"))
+    .map((n) => JSON.parse(fs.readFileSync(`${p}/${n}`, "utf8")))
+    .filter((r) => r.suite === "integrations" && r.source_sha === source);
+  if (matches.length !== 1) throw new Error(`expected one exact-source integration receipt, found ${matches.length}`);
+  process.stdout.write(matches[0].log);
+' "$evidence" "$source_sha")
+cp "$evidence/$integration_log" "$evidence/traces/integrations.log"
 data="$root/var/scopewright/evidence.jsonl"; test -s "$data"; head -1 "$data" > "$evidence/traces/primary.jsonl"; tail -1 "$data" > "$evidence/traces/durable.jsonl"
 printf '%s\n' '{"journey":"denial-recovery","policy_denied":true,"forbidden_downstream_effect":false,"recovery":"passed","source":"executed Playwright report"}' > "$evidence/traces/denial.jsonl"
 node "$root/scripts/generate-composition.mjs" "$evidence"
