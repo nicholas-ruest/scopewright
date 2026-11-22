@@ -10,3 +10,6 @@
 *.tsbuildinfo
 
 .dm-private/
+
+.claude-flow/
+.swarm/

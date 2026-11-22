@@ -2,16 +2,20 @@ use scopewright_kernel::{DomainError, FactoryRunRequest, StageResult};
 
 pub fn budget(request: &FactoryRunRequest) -> Result<StageResult, DomainError> {
     request.validate_identity()?;
-    if request.token_budget > 720 {
+    if request.scope_pressure > 95 {
         return Err(DomainError::Denied(
-            "deadline consumes operational day".into(),
+            "execution pressure cannot meet the 120 second deadline".into(),
         ));
     }
-    let score = ((1440 - request.token_budget) as f64 / 14.4).clamp(0.0, 100.0);
+    let score = (100.0 - request.scope_pressure as f64).clamp(0.0, 100.0);
     Ok(StageResult {
         stage: "deadline".into(),
         score,
-        message: "reserved execution deadline".into(),
-        evidence: vec![format!("deadline:{}:{:.2}", request.stable_key(), score)],
+        message: "reserved 120 second execution deadline".into(),
+        evidence: vec![format!(
+            "deadline:{}:120s:{:.2}",
+            request.stable_key(),
+            score
+        )],
     })
 }

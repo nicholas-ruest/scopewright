@@ -1,42 +1,35 @@
-import { expect, test } from "@playwright/test";
-import { execFileSync } from "node:child_process";
-import { fileURLToPath } from "node:url";
+import {expect,test} from "@playwright/test";
+import {execFileSync} from "node:child_process";
+import {fileURLToPath} from "node:url";
 const root=fileURLToPath(new URL("../..",import.meta.url));
 
-test("[journey:primary] operator completes a source-bound factory_run",async({page})=>{
-  await page.goto("/");
-  await expect(page.getByRole("heading",{name:/rehearse the outage/i})).toBeVisible();
-  await page.getByLabel("Service").fill("checkout-edge");
-  await page.getByLabel("Failure trace_summary").fill("regional message-bus isolation");
-  await page.getByRole("button",{name:/run controlled factory_run/i}).click();
-  await expect(page.getByText("FactoryRun completed")).toBeVisible({timeout:120_000});
-  await expect(page.getByTestId("result")).toContainText("17 accountable stages");
-  await page.screenshot({path:"../.evidence/screenshots/primary-desktop.png",fullPage:true});
+test("[journey:primary] operator completes a source-bound factory run",async({page})=>{
+ await page.goto("/"); await expect(page.getByRole("heading",{name:/guard scope/i})).toBeVisible();
+ await page.getByLabel("Factory service").fill("nightly-product-factory");
+ await page.getByLabel("Execution trace").fill("browser → typed API → middleware → Rust governance → upstream mesh → durable audit");
+ await page.getByRole("button",{name:/run governed evaluation/i}).click();
+ await expect(page.getByText("governance confidence")).toBeVisible({timeout:150000});
+ await expect(page.locator(".success ol li")).toHaveCount(17);
+ await page.screenshot({path:"../.evidence/screenshots/primary-desktop.png",fullPage:true});
 });
 
-test("[journey:denial-recovery] policy denial writes nothing and recovery succeeds",async({page,request})=>{
-  const before=(await (await request.get("http://127.0.0.1:8787/api/v1/audit")).json() as unknown[]).length;
-  await page.goto("/");
-  await page.getByLabel("Operator role").selectOption("observer");
-  await page.getByRole("button",{name:/run controlled factory_run/i}).click();
-  await expect(page.getByRole("alert")).toContainText("policy denied");
-  const after=(await (await request.get("http://127.0.0.1:8787/api/v1/audit")).json() as unknown[]).length;
-  expect(after).toBe(before);
-  await page.getByRole("button",{name:/restore operator access/i}).click();
-  await page.getByRole("button",{name:/run controlled factory_run/i}).click();
-  await expect(page.getByText("FactoryRun completed")).toBeVisible({timeout:120_000});
+test("[journey:denial-recovery] protected scope denial writes nothing",async({page,request})=>{
+ const h={Authorization:"Bearer scopewright-operator","x-role":"factory_run-operator","x-operator":"browser@example.com"};
+ const before=(await (await request.get("http://127.0.0.1:8787/api/v1/audit",{headers:h})).json() as unknown[]).length;
+ await page.goto("/"); await page.getByLabel("Execution trace").fill("remove frontend and skip durable-audit to reduce cost");
+ await page.getByRole("button",{name:/run governed evaluation/i}).click();
+ await expect(page.getByText("Execution denied safely")).toBeVisible();
+ const after=(await (await request.get("http://127.0.0.1:8787/api/v1/audit",{headers:h})).json() as unknown[]).length; expect(after).toBe(before);
+ await page.getByRole("button",{name:/apply recovery trace/i}).click(); await page.getByRole("button",{name:/run governed evaluation/i}).click();
+ await expect(page.getByText("governance confidence")).toBeVisible({timeout:150000});
 });
 
-test("[journey:durable-retrieval] refresh renders saved hash-chain evidence",async({page})=>{
-  execFileSync(`${root}/scripts/stop.sh`,{stdio:"inherit"});
-  execFileSync(`${root}/scripts/start.sh`,{stdio:"inherit"});
-  await page.goto("/");
-  await page.getByRole("button",{name:/evidence/i}).click();
-  await expect(page.getByTestId("evidence-card").first()).toBeVisible();
-  const correlation=await page.getByTestId("evidence-card").first().locator("dd").first().textContent();
-  await page.reload();
-  await page.getByRole("button",{name:/evidence/i}).click();
-  await expect(page.getByTestId("evidence-card").first()).toContainText(correlation ?? "missing");
-  await page.setViewportSize({width:390,height:844});
-  await page.screenshot({path:"../.evidence/screenshots/durable-mobile.png",fullPage:true});
+test("[journey:durable-retrieval] refresh and restart preserve audit",async({page})=>{
+ await page.goto("/"); await page.getByRole("button",{name:/audit ledger/i}).click();
+ await expect(page.locator(".ledger article").first()).toBeVisible(); const hash=await page.locator(".ledger article code").first().textContent();
+ await page.reload(); await page.getByRole("button",{name:/audit ledger/i}).click(); await expect(page.locator(".ledger article code").first()).toHaveText(hash??"");
+ execFileSync(`${root}/scripts/stop.sh`,{stdio:"inherit",env:process.env}); execFileSync(`${root}/scripts/start.sh`,{stdio:"inherit",env:process.env});
+ await page.waitForTimeout(1000);
+ await page.goto("/"); await page.getByRole("button",{name:/audit ledger/i}).click(); await expect(page.locator(".ledger article code").first()).toHaveText(hash??"");
+ await page.setViewportSize({width:390,height:844}); await page.screenshot({path:"../.evidence/screenshots/durable-mobile.png",fullPage:true});
 });

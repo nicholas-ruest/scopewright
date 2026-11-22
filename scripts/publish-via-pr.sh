@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
-owner=nicholas-ruest; repo=scopewright; branch=product/scopewright-2026-11-20
+owner=nicholas-ruest; repo=scopewright; branch=product/scopewright-2026-11-21
 test "$(gh api user --jq .login)" = "$owner" || { echo PUBLISH_DENIED:wrong-owner >&2; exit 71; }
 if gh repo view "$owner/$repo" >/dev/null 2>&1; then echo PUBLISH_DENIED:repository-exists >&2; exit 72; fi
 test -z "$(git status --porcelain)"; source_sha=$(git rev-parse HEAD); base_sha=$(git rev-list --max-parents=0 HEAD)
 test "$(git ls-tree -r --name-only "$base_sha" | wc -l)" -ge 10
-gh repo create "$owner/$repo" --public --description "Evidence-bearing operational resilience factory_run studio"
+gh repo create "$owner/$repo" --public --description "Evidence-bearing AI factory governance and control studio"
 remote="https://github.com/$owner/$repo.git"; git remote add origin "$remote"
 git push origin "$base_sha:refs/heads/main"; git push origin "$source_sha:refs/heads/$branch"
 stage=$(mktemp -d); trap 'rm -rf "$stage"' EXIT

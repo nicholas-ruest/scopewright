@@ -1,21 +1,19 @@
 services:
   scopewright:
-    build:
-      context: .
-      dockerfile: Containerfile
+    build: {context: ., dockerfile: Containerfile}
     ports: ["8787:8080"]
     volumes:
       - scopewright-data:/data
-      - ${SCOPEWRIGHT_UPSTREAM_ROOT:?exact-pinned upstream root required}:/upstreams:ro
+      - ${SCOPEWRIGHT_PROBE_ROOT:?source-bound integration root required}:/upstreams:ro
     environment:
-      SCOPEWRIGHT_RUVECTOR_CMD: /app/scripts/upstream-runtime/run.sh ruvector
-      SCOPEWRIGHT_FANN_CMD: /app/scripts/upstream-runtime/run.sh fann
-      SCOPEWRIGHT_MIDSTREAM_CMD: /app/scripts/upstream-runtime/run.sh midstream
-      SCOPEWRIGHT_QUDAG_CMD: /app/scripts/upstream-runtime/run.sh qudag
-      SCOPEWRIGHT_FEDERATION_CMD: /app/scripts/upstream-runtime/run.sh federation
-      SCOPEWRIGHT_OPA_CMD: /app/scripts/upstream-runtime/run.sh opa
-      SCOPEWRIGHT_NATS_CMD: /app/scripts/upstream-runtime/run.sh nats
+      SCOPEWRIGHT_PROBE_ROOT: /upstreams
+      SCOPEWRIGHT_RUFLO_CMD: /app/scripts/upstream-runtime/run.sh ruflo
+      SCOPEWRIGHT_METAHARNESS_CMD: /app/scripts/upstream-runtime/run.sh metaharness
+      SCOPEWRIGHT_AGENTDB_CMD: /app/scripts/upstream-runtime/run.sh agentdb
+      SCOPEWRIGHT_SITE_HARNESS_CMD: /app/scripts/upstream-runtime/run.sh site-harness
+      SCOPEWRIGHT_SUBLINEAR_CMD: /app/scripts/upstream-runtime/run.sh sublinear
+      SCOPEWRIGHT_TOKENECONOMIZER_CMD: /app/scripts/upstream-runtime/run.sh tokeneconomizer
+      SCOPEWRIGHT_OTEL_CMD: /app/scripts/upstream-runtime/run.sh otel
     security_opt: ["no-new-privileges"]
     cap_drop: ["ALL"]
-volumes:
-  scopewright-data: {}
+volumes: {scopewright-data: {}}

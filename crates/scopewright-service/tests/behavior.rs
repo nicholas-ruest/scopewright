@@ -25,7 +25,7 @@ async fn browser_to_durable_result_slice() {
     let path =
         std::env::temp_dir().join(format!("scopewright-service-{}.jsonl", std::process::id()));
     let app = router(AppState::open(&path).unwrap());
-    let body = r#"{"service":"checkout","trace_summary":"regional failover","scope_pressure":25,"token_budget":30}"#;
+    let body = r#"{"service":"checkout","trace_summary":"regional failover","scope_pressure":25,"token_budget":18000}"#;
     let response = app
         .oneshot(
             Request::post("/api/v1/factory_runs")

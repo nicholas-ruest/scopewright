@@ -1,30 +1,14 @@
 #!/usr/bin/env bash
 set -euo pipefail
-root=${1:?upstream checkout directory required}; mkdir -p "$root"
-clone_pin(){
-  local name=$1 url=$2 sha=$3 dir="$root/$1"
-  test ! -e "$dir"; git init -q "$dir"
-  git -C "$dir" remote add origin "$url"
-  git -C "$dir" fetch -q --depth 1 origin "$sha"
-  git -C "$dir" checkout -q --detach FETCH_HEAD
-  test "$(git -C "$dir" rev-parse HEAD)" = "$sha"
-}
-clone_pin ruvector https://github.com/ruvnet/RuVector.git 979c31acc57b970c1a7e0771ed527c1703c137e8
-clone_pin ruv-fann https://github.com/ruvnet/ruv-FANN.git 02431fd3b3d5639f38feee8f964ec9a8bcc27fc5
-clone_pin midstream https://github.com/ruvnet/midstream.git 0934fd3b2f92b4abf93d0d56e6d9085a8d4ad92e
-clone_pin qudag https://github.com/ruvnet/QuDAG.git b53466814554737c93f916d458783f7dff6c8acd
-clone_pin federated-mcp https://github.com/ruvnet/federated-mcp.git 1caf7ace9e8c6977e1c0d77c89989d9ae6a35f71
-clone_pin opa https://github.com/open-policy-agent/opa.git ba39415db4b3c90cd68942a74b3cc2223ec2b23c
-clone_pin nats-server https://github.com/nats-io/nats-server.git 2a9066eb57ff4aa50d8e6a979bdfbd6a8b9db251
-npm --prefix "$root/federated-mcp/modern" ci --no-audit --no-fund
-(
-  cd "$root/opa"
-  go build -trimpath -o opa .
-)
-(
-  cd "$root/nats-server"
-  go build -trimpath -o nats-server .
-)
-test -x "$root/opa/opa"
-test -x "$root/nats-server/nats-server"
-printf 'CI_UPSTREAMS_READY=%s\n' "$root"
+root=$(cd "$(dirname "$0")/.." && pwd); up=${SCOPEWRIGHT_PROBE_ROOT:-${1:-$root/.upstreams}}; mkdir -p "$up/probe-work" "$up/probe-sources"
+cat > "$up/probe-work/package.json" <<'JSON'
+{"private":true,"dependencies":{"ruflo":"3.80.0","metaharness":"0.4.24","agentdb":"3.10.1","@ruvnet/site-harness":"0.2.1"}}
+JSON
+npm --prefix "$up/probe-work" install --ignore-scripts --no-audit --no-fund
+clone(){ n=$1; u=$2; s=$3; test -d "$up/probe-sources/$n/.git" || git clone -q "$u" "$up/probe-sources/$n"; git -C "$up/probe-sources/$n" fetch -q origin "$s"; git -C "$up/probe-sources/$n" checkout -q --detach "$s"; }
+clone sublinear https://github.com/ruvnet/sublinear-time-solver.git b945e269ea1a910d0d7ce6e3eea4aa2ecf4aa191
+clone tokeneconomizer https://github.com/microsoft/TokenEconomizer.git 1bfeccdcecf48333b22762ad1dd9e36c6dc065df
+python3 -m venv "$up/probe-venv"; "$up/probe-venv/bin/pip" install -q "$up/probe-sources/tokeneconomizer"
+podman image inspect otel/opentelemetry-collector-contrib@sha256:5901567d6f684547bafee53f02403869b5655e13a4e0af65aa6ae9f6301075d9 >/dev/null 2>&1 || podman pull otel/opentelemetry-collector-contrib@sha256:5901567d6f684547bafee53f02403869b5655e13a4e0af65aa6ae9f6301075d9 >/dev/null
+"$up/probe-work/node_modules/.bin/agentdb" init "$up/agentdb-recorded.db" >/dev/null
+export SCOPEWRIGHT_PROBE_ROOT="$up"; if test -n "${GITHUB_ENV:-}"; then printf 'SCOPEWRIGHT_PROBE_ROOT=%s\n' "$up" >> "$GITHUB_ENV"; fi; echo UPSTREAM_BOOTSTRAP_PASS

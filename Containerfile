@@ -18,7 +18,7 @@ WORKDIR /app
 COPY --from=build /src/target/release/scopewright-service /usr/local/bin/scopewright-service
 COPY --from=web /src/frontend/dist/ frontend/dist/
 COPY scripts/upstream-runtime/ scripts/upstream-runtime/
-ENV PORT=8080 SCOPEWRIGHT_DATA_PATH=/data/evidence.jsonl SCOPEWRIGHT_UPSTREAM_ROOT=/upstreams SCOPEWRIGHT_UPSTREAM_TARGET=/tmp/upstream-target
+ENV PORT=8080 SCOPEWRIGHT_DATA_PATH=/data/evidence.jsonl SCOPEWRIGHT_PROBE_ROOT=/upstreams
 USER scopewright
 EXPOSE 8080
 ENTRYPOINT ["/usr/local/bin/scopewright-service"]
