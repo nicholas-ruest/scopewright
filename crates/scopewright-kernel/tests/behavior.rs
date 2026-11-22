@@ -5,7 +5,7 @@ fn accepts_well_formed_factory_run() {
         service: "checkout".into(),
         trace_summary: "regional failover".into(),
         scope_pressure: 25,
-        token_budget: 30,
+        token_budget: 18_000,
         operator: "sre@example.com".into(),
     };
     assert!(r.validate_identity().is_ok());

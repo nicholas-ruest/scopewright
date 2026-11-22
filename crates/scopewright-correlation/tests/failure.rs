@@ -6,7 +6,7 @@ fn rejects_domain_boundary() {
         service: "".into(),
         trace_summary: "x".into(),
         scope_pressure: 20,
-        token_budget: 30,
+        token_budget: 18_000,
         operator: "x".into(),
     };
     assert!(correlate(&r).is_err());

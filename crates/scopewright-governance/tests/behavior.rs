@@ -6,7 +6,7 @@ fn composes_domain_stages() {
         service: "checkout".into(),
         trace_summary: "regional failover".into(),
         scope_pressure: 25,
-        token_budget: 30,
+        token_budget: 18_000,
         operator: "sre@example.com".into(),
     };
     let s = run_domain(&r).unwrap();

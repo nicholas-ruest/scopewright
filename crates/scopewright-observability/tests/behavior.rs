@@ -5,7 +5,7 @@ fn request() -> FactoryRunRequest {
         service: "checkout".into(),
         trace_summary: "regional failover exercise".into(),
         scope_pressure: 25,
-        token_budget: 30,
+        token_budget: 18_000,
         operator: "sre@example.com".into(),
     }
 }

@@ -5,7 +5,7 @@ fn maps_typed_contract() {
         service: "checkout".into(),
         trace_summary: "failover".into(),
         scope_pressure: 20,
-        token_budget: 30,
+        token_budget: 18_000,
     }
     .into_domain("sre@example.com".into());
     assert_eq!(d.service, "checkout");

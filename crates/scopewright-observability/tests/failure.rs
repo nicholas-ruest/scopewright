@@ -8,7 +8,7 @@ fn rejects_domain_boundary() {
                 .into(),
         trace_summary: "failover".into(),
         scope_pressure: 20,
-        token_budget: 30,
+        token_budget: 18_000,
         operator: "sre@example.com".into(),
     };
     assert!(instrument(&r).is_err());

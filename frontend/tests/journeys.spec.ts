@@ -29,6 +29,7 @@ test("[journey:durable-retrieval] refresh and restart preserve audit",async({pag
  await expect(page.locator(".ledger article").first()).toBeVisible(); const hash=await page.locator(".ledger article code").first().textContent();
  await page.reload(); await page.getByRole("button",{name:/audit ledger/i}).click(); await expect(page.locator(".ledger article code").first()).toHaveText(hash??"");
  execFileSync(`${root}/scripts/stop.sh`,{stdio:"inherit",env:process.env}); execFileSync(`${root}/scripts/start.sh`,{stdio:"inherit",env:process.env});
+ await page.waitForTimeout(1000);
  await page.goto("/"); await page.getByRole("button",{name:/audit ledger/i}).click(); await expect(page.locator(".ledger article code").first()).toHaveText(hash??"");
  await page.setViewportSize({width:390,height:844}); await page.screenshot({path:"../.evidence/screenshots/durable-mobile.png",fullPage:true});
 });

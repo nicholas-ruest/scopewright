@@ -6,7 +6,7 @@ fn rejects_domain_boundary() {
         service: "checkout".into(),
         trace_summary: "x".into(),
         scope_pressure: 20,
-        token_budget: 30,
+        token_budget: 18_000,
         operator: "sre@example.com".into(),
     };
     assert!(compile_plan(&r).is_err());

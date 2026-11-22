@@ -11,7 +11,7 @@ async fn policy_denial_has_no_downstream_write() {
         std::env::temp_dir().join(format!("scopewright-denial-{}.jsonl", std::process::id()));
     let state = AppState::open(&path).unwrap();
     let app = router(state.clone());
-    let body = r#"{"service":"checkout","trace_summary":"unsafe global failover","scope_pressure":95,"token_budget":30}"#;
+    let body = r#"{"service":"checkout","trace_summary":"unsafe global failover","scope_pressure":95,"token_budget":18000}"#;
     let response = app
         .oneshot(
             Request::post("/api/v1/factory_runs")
