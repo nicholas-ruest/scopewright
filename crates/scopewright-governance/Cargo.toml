@@ -1,0 +1,20 @@
+[package]
+name = "scopewright-governance"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+scopewright-kernel = { path = "../scopewright-kernel" }
+serde.workspace = true
+thiserror.workspace = true
+scopewright-trace = { path = "../scopewright-trace" }
+scopewright-identity = { path = "../scopewright-identity" }
+scopewright-authorization = { path = "../scopewright-authorization" }
+scopewright-validation = { path = "../scopewright-validation" }
+scopewright-correlation = { path = "../scopewright-correlation" }
+scopewright-deadline = { path = "../scopewright-deadline" }
+scopewright-observability = { path = "../scopewright-observability" }
+scopewright-quality = { path = "../scopewright-quality" }
+scopewright-telemetry = { path = "../scopewright-telemetry" }
+scopewright-allocation = { path = "../scopewright-allocation" }

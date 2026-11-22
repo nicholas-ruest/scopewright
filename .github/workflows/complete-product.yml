@@ -1,0 +1,53 @@
+name: Complete product exact-head
+on:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: "${{ github.event.pull_request.head.sha || github.sha }}"
+      - name: Exact head binding
+        env: {EXPECTED_SHA: "${{ github.event.pull_request.head.sha || github.sha }}"}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
+      - uses: dtolnay/rust-toolchain@master
+        with: {toolchain: 1.100.0, components: rustfmt,clippy}
+      - uses: actions/setup-node@v4
+        with: {node-version: 24.21.0, cache: npm, cache-dependency-path: frontend/package-lock.json}
+      - uses: actions/setup-go@v5
+        with: {go-version: '1.25.x', cache: false}
+      - run: sudo apt-get update -qq && sudo apt-get install -y --no-install-recommends podman uidmap slirp4netns fuse-overlayfs netavark aardvark-dns
+      - run: npm --prefix frontend ci --no-audit --no-fund
+      - name: Install Chrome
+        id: setup-chrome
+        uses: browser-actions/setup-chrome@v1
+      - name: Bind Playwright to Chrome
+        run: echo "PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=${{ steps.setup-chrome.outputs.chrome-path }}" >> "$GITHUB_ENV"
+      - run: bash scripts/ci-bootstrap-upstreams.sh "$RUNNER_TEMP/scopewright-upstreams"
+      - run: cargo fetch --locked
+      - run: bash scripts/suite-rust.sh
+      - run: bash scripts/suite-frontend.sh
+      - name: Rust source floor
+        run: node scripts/dream-machine-rust-share.mjs .
+      - name: Fetch exact-source external evidence
+        env: {EVIDENCE_URL: "https://github.com/${{ github.repository }}/releases/download/evidence-${{ github.event.pull_request.head.sha || github.sha }}/scopewright-evidence-${{ github.event.pull_request.head.sha || github.sha }}.tgz"}
+        run: |
+          test -n "$EVIDENCE_URL"
+          curl --fail --location "$EVIDENCE_URL" -o "$RUNNER_TEMP/evidence.tgz"
+          mkdir "$RUNNER_TEMP/evidence-seed"
+          tar -xzf "$RUNNER_TEMP/evidence.tgz" -C "$RUNNER_TEMP/evidence-seed"
+          test -f "$RUNNER_TEMP/evidence-seed/seed/semantic-review.md"
+          test -f "$RUNNER_TEMP/evidence-seed/seed/selection-report.json"
+      - name: Pinned complete-product controller
+        env:
+          DREAM_MACHINE_PRODUCER_RUN_ID: "${{ github.run_id }}"
+          DREAM_MACHINE_SEMANTIC_REVIEW: "${{ runner.temp }}/evidence-seed/seed/semantic-review.md"
+          DREAM_MACHINE_SELECTION_REPORT: "${{ runner.temp }}/evidence-seed/seed/selection-report.json"
+          DREAM_MACHINE_SELECTION_EVIDENCE: "${{ runner.temp }}/evidence-seed/seed/selection-evidence"
+          SCOPEWRIGHT_UPSTREAM_ROOT: "${{ runner.temp }}/scopewright-upstreams"
+        run: node scripts/dream-machine-publication-gate.mjs --check . "$RUNNER_TEMP/ci-evidence"

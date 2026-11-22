@@ -1,0 +1,2 @@
+# Crate-to-backend call paths
+`service → governance → trace/identity/authorization/validation/correlation/deadline/observability/quality/telemetry/allocation` is the domain path. `service → seven upstream-* crates` is the executed integration path. `service → audit → evidence → persistence` is the durable write path. `service → retrieval → persistence → evidence` is the restart read path. `api-schema → kernel` owns transport conversion. Every arrow is a normal production call, not a developer-only test dependency.

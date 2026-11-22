@@ -1,0 +1,61 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Scopewright API",
+    "version": "v1",
+    "x-schema-fingerprint": "scopewright-api-v1-2026-11-21"
+  },
+  "paths": {
+    "/api/v1/factory_runs": {
+      "post": {
+        "operationId": "createFactoryRun"
+      },
+      "get": {
+        "operationId": "listFactoryRuns"
+      }
+    },
+    "/api/v1/factory_runs/{correlation}": {
+      "get": {
+        "operationId": "replayFactoryRun"
+      }
+    },
+    "/api/v1/audit": {
+      "get": {
+        "operationId": "readAudit"
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CreateFactoryRun": {
+        "type": "object",
+        "required": [
+          "service",
+          "trace_summary",
+          "scope_pressure",
+          "token_budget"
+        ]
+      },
+      "FactoryRunResponse": {
+        "type": "object",
+        "required": [
+          "id",
+          "correlation_id",
+          "status",
+          "decision",
+          "risk_score",
+          "stages",
+          "evidence_hash"
+        ]
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "required": [
+          "code",
+          "message",
+          "correlation_id"
+        ]
+      }
+    }
+  }
+}

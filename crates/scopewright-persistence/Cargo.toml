@@ -1,0 +1,12 @@
+[package]
+name = "scopewright-persistence"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+scopewright-kernel = { path = "../scopewright-kernel" }
+serde.workspace = true
+thiserror.workspace = true
+serde_json.workspace = true
+scopewright-evidence = { path = "../scopewright-evidence" }

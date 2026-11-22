@@ -1,0 +1,21 @@
+services:
+  scopewright:
+    build:
+      context: .
+      dockerfile: Containerfile
+    ports: ["8787:8080"]
+    volumes:
+      - scopewright-data:/data
+      - ${SCOPEWRIGHT_UPSTREAM_ROOT:?exact-pinned upstream root required}:/upstreams:ro
+    environment:
+      SCOPEWRIGHT_RUVECTOR_CMD: /app/scripts/upstream-runtime/run.sh ruvector
+      SCOPEWRIGHT_FANN_CMD: /app/scripts/upstream-runtime/run.sh fann
+      SCOPEWRIGHT_MIDSTREAM_CMD: /app/scripts/upstream-runtime/run.sh midstream
+      SCOPEWRIGHT_QUDAG_CMD: /app/scripts/upstream-runtime/run.sh qudag
+      SCOPEWRIGHT_FEDERATION_CMD: /app/scripts/upstream-runtime/run.sh federation
+      SCOPEWRIGHT_OPA_CMD: /app/scripts/upstream-runtime/run.sh opa
+      SCOPEWRIGHT_NATS_CMD: /app/scripts/upstream-runtime/run.sh nats
+    security_opt: ["no-new-privileges"]
+    cap_drop: ["ALL"]
+volumes:
+  scopewright-data: {}

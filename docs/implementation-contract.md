@@ -1,0 +1,2 @@
+# Implementation contract
+Every counted crate has a typed production responsibility, a composition-root caller, behavior/failure tests and reciprocal mapping. Every credited upstream must execute both intended and failure paths at its immutable revision. The ten evidence suites are rust, backend, frontend, api, middleware, integrations, benchmark, ablations, containers and browser. Complete means all pass at one clean SHA and independent semantic review confirms the actual caller paths.

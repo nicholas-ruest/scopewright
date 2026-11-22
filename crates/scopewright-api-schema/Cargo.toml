@@ -1,0 +1,10 @@
+[package]
+name = "scopewright-api-schema"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+scopewright-kernel = { path = "../scopewright-kernel" }
+serde.workspace = true
+thiserror.workspace = true

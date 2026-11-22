@@ -1,0 +1,46 @@
+[package]
+name = "scopewright-service"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+scopewright-kernel = { path = "../scopewright-kernel" }
+serde.workspace = true
+thiserror.workspace = true
+serde_json.workspace = true
+anyhow.workspace = true
+axum.workspace = true
+tokio.workspace = true
+tower.workspace = true
+tower-http.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true
+uuid.workspace = true
+scopewright-trace = { path = "../scopewright-trace" }
+scopewright-identity = { path = "../scopewright-identity" }
+scopewright-authorization = { path = "../scopewright-authorization" }
+scopewright-validation = { path = "../scopewright-validation" }
+scopewright-correlation = { path = "../scopewright-correlation" }
+scopewright-deadline = { path = "../scopewright-deadline" }
+scopewright-observability = { path = "../scopewright-observability" }
+scopewright-quality = { path = "../scopewright-quality" }
+scopewright-telemetry = { path = "../scopewright-telemetry" }
+scopewright-evidence = { path = "../scopewright-evidence" }
+scopewright-audit = { path = "../scopewright-audit" }
+scopewright-persistence = { path = "../scopewright-persistence" }
+scopewright-retrieval = { path = "../scopewright-retrieval" }
+scopewright-allocation = { path = "../scopewright-allocation" }
+scopewright-governance = { path = "../scopewright-governance" }
+scopewright-upstream-otel = { path = "../scopewright-upstream-otel" }
+scopewright-upstream-ruflo = { path = "../scopewright-upstream-ruflo" }
+scopewright-upstream-agentdb = { path = "../scopewright-upstream-agentdb" }
+scopewright-upstream-tokeneconomizer = { path = "../scopewright-upstream-tokeneconomizer" }
+scopewright-upstream-metaharness = { path = "../scopewright-upstream-metaharness" }
+scopewright-upstream-sublinear = { path = "../scopewright-upstream-sublinear" }
+scopewright-upstream-site-harness = { path = "../scopewright-upstream-site-harness" }
+scopewright-api-schema = { path = "../scopewright-api-schema" }
+
+[[bin]]
+name = "scopewright-service"
+path = "src/main.rs"

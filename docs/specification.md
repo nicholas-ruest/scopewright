@@ -1,0 +1,4 @@
+# Scopewright product specification
+Scopewright is an adaptive governance studio for teams running AI product factories. It ingests an execution trace, refuses changes that erase required full-stack capabilities, distributes a verification budget, executes seven pinned intelligence/observability responsibilities, and saves a correlated decision in external append-only storage. Primary acceptance is a browser-created saved decision. Negative acceptance is a protected-scope denial with no adapter or persistence side effect. Durability acceptance is replay after refresh and backend restart.
+
+The product includes a React operator console, versioned API, ordered middleware, Rust composition root, 25 production crates, shared storage, rootless containers and Cloud Run-compatible configuration. It is not a generic dashboard: every view exposes factory-specific scope pressure, evidence allocation, integration mesh and audit replay.
