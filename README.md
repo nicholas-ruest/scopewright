@@ -29,4 +29,4 @@ Open `http://127.0.0.1:8787`. Stop with `scripts/stop.sh`; reset only generated 
 ## Verification
 `scripts/verify-prototype.sh` is the canonical complete-product wrapper. `scripts/collect-product-evidence.sh <external-dir>` runs all ten suites and binds receipts to the clean commit. Publication is PR-only and human-merged; no deployment is performed.
 
-Licensed under Apache-2.0. Scopewright is a new standalone product; upstream projects retain their own licenses and attribution.
+Licensed under the [MIT License](LICENSE). Scopewright is a new standalone product; upstream projects retain their own licenses and attribution.
